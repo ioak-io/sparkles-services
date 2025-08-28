@@ -1,9 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import healthcheckRouter from './routes/healthcheck';
+import mongoose from "mongoose";
+import teamRouter from './routes/team';
+import teamsRouter from './routes/teams';
 
 dotenv.config();
+
+const databaseUri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27016";
+mongoose.connect(databaseUri, {});
+mongoose.pluralize(undefined);
 
 const app = express();
 
@@ -20,13 +26,15 @@ app.use(
   })
 );
 
-app.get("/", (req: any, res: any) => {
+app.use('/', teamsRouter);
+
+app.get("/hello", (req: any, res: any) => {
   res.json({
     message: "hello"
   });
 });
 
-app.use('/:team/healthcheck', healthcheckRouter);
+app.use('/:reference', teamRouter);
 
 // 404 Handler
 app.use((_: any, res: any) => {
