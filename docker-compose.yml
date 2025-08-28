@@ -1,0 +1,23 @@
+version: "3.3"
+
+services:
+  sparkles-team-service:
+    build:
+      context: ./team-service
+      dockerfile: Dockerfile
+    container_name: sparkles-team-service
+    restart: always
+    ports:
+      - "2011:2011"
+    env_file:
+      - ./team-service/.env
+    environment:
+      NODE_ENV: development
+      PORT: 2011
+      CORS_ORIGIN: "*"
+    networks:
+      - ioak-network
+
+networks:
+  ioak-network:
+    external: true
